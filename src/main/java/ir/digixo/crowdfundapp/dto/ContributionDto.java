@@ -27,4 +27,6 @@ public class ContributionDto {
 
     private ContributionStatus status;
 
+    private BigDecimal userContributionPercentage;
+
 }
