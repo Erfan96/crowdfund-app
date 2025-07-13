@@ -27,9 +27,7 @@ public class ProjectDto {
 
     private BigDecimal targetAmount;
 
-    private BigDecimal collectedAmount;
-
-    private UserDto user;
+    private Long userId;
 
     private ProjectStatus status;
 
