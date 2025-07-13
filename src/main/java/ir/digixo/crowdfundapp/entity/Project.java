@@ -40,8 +40,6 @@ public class Project {
     @Column(nullable = false)
     private BigDecimal targetAmount;
 
-    private BigDecimal collectedAmount;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = USER_ID)
     private User user;
