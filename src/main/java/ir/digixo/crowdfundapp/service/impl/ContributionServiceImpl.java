@@ -2,6 +2,7 @@ package ir.digixo.crowdfundapp.service.impl;
 
 import ir.digixo.crowdfundapp.dto.ContributionDto;
 import ir.digixo.crowdfundapp.dto.ProjectDto;
+import ir.digixo.crowdfundapp.dto.UserDto;
 import ir.digixo.crowdfundapp.entity.Contribution;
 import ir.digixo.crowdfundapp.entity.Project;
 import ir.digixo.crowdfundapp.entity.User;
@@ -18,9 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ContributionServiceImpl implements ContributionService {
@@ -57,6 +56,11 @@ public class ContributionServiceImpl implements ContributionService {
     @Override
     public BigDecimal getTotalAmountContributionByUserId(Long userId) {
         return contributionRepository.getTotalAmountForUser(userId);
+    }
+
+    @Override
+    public BigDecimal getTotalAmountContributionByUserIdPerProject(Long projectId, Long userId) {
+        return contributionRepository.getTotalAmountForUserPerProject(projectId, userId);
     }
 
     @Override
@@ -148,46 +152,42 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public List<ContributionDto> getUserContributionPercentage(Long userId, ContributionStatus status) {
-        List<Object[]> userData = contributionRepository.findUserContributionByProject(userId, status);
-        Map<Long, BigDecimal> userAmounts = new HashMap<>();
-        Map<Long, String> titles = new HashMap<>();
-
-        for (Object[] row : userData) {
-            Long projectId = (Long) row[0];
-            String title = (String) row[1];
-            BigDecimal amount = (BigDecimal) row[2];
-
-            userAmounts.put(projectId, amount);
-            titles.put(projectId, title);
-        }
-
-        List<Object[]> totalData = contributionRepository.findTotalContributionPerProject(status);
-        Map<Long, BigDecimal> totalAmounts = new HashMap<>();
-        for (Object[] row : totalData) {
-            totalAmounts.put((Long) row[0], (BigDecimal) row[1]);
-        }
-
+    public List<ContributionDto> getUserContributionPercentageByUserIdAndStatus(Long userId, ContributionStatus status) {
         List<ContributionDto> result = new ArrayList<>();
-        for (Long projectId : userAmounts.keySet()) {
-            BigDecimal userAmount = userAmounts.get(projectId);
-            BigDecimal totalAmount = totalAmounts.getOrDefault(projectId, BigDecimal.ONE);
+        List<Object[]> allUserContributionPercentageByUserId = contributionRepository.getUserContributionPercentageByUserId(userId, status);
 
-            BigDecimal percent = userAmount
-                    .divide(totalAmount, 4, RoundingMode.HALF_UP)
-                    .multiply(BigDecimal.valueOf(100));
+        for (Object[] row : allUserContributionPercentageByUserId) {
+            ContributionDto contributionDto = new ContributionDto();
+            contributionDto.setUserContributionPercentage((BigDecimal) row[0]);
 
-            ContributionDto dto = new ContributionDto();
             ProjectDto projectDto = new ProjectDto();
-            projectDto.setId(projectId);
-            projectDto.setTitle(titles.get(projectId));
-            dto.setProject(projectDto);
-            dto.setUserContributionPercentage(percent);
+            projectDto.setId((Long) row[1]);
+            projectDto.setTitle((String) row[2]);
+            contributionDto.setProject(projectDto);
 
-            result.add(dto);
+            result.add(contributionDto);
         }
 
         return result;
     }
 
+    @Override
+    public List<ContributionDto> getUserContributionPercentageByProjectIdAndStatus(Long projectId, ContributionStatus status) {
+        List<ContributionDto> result = new ArrayList<>();
+        List<Object[]> allUserContributionPercentageByProjectId = contributionRepository.getUserContributionPercentageByProjectId(projectId, status);
+
+        for (Object[] row : allUserContributionPercentageByProjectId) {
+            ContributionDto contributionDto = new ContributionDto();
+            contributionDto.setUserContributionPercentage((BigDecimal) row[0]);
+
+            UserDto userDto = new UserDto();
+            userDto.setId((Long) row[1]);
+            userDto.setUsername((String) row[2]);
+            contributionDto.setUser(userDto);
+
+            result.add(contributionDto);
+        }
+
+        return result;
+    }
 }

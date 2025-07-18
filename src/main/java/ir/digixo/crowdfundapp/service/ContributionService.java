@@ -18,10 +18,12 @@ public interface ContributionService {
     List<ContributionDto> getContributionsByProjectId(Long projectId);
     BigDecimal getTotalAmountContributedToProject(Long projectId);
     BigDecimal getTotalAmountContributionByUserId(Long userId);
+    BigDecimal getTotalAmountContributionByUserIdPerProject(Long projectId, Long userId);
     List<ContributionDto> getRecentContributionsByProjectId(Long projectId);
     BigDecimal getProjectFundingProgress(Long projectId);
     void setCancel(Long id);
     void setComplete(Long id);
-    List<ContributionDto> getUserContributionPercentage(Long userId, ContributionStatus status);
+    List<ContributionDto> getUserContributionPercentageByUserIdAndStatus(Long userId, ContributionStatus status);
+    List<ContributionDto> getUserContributionPercentageByProjectIdAndStatus(Long projectId, ContributionStatus status);
 
 }

@@ -21,24 +21,26 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
     @Query("select sum(c.amount) from Contribution c where c.user.id = :userId")
     BigDecimal getTotalAmountForUser(@Param("userId") Long userId);
 
+    @Query("select sum (c.amount) from Contribution c where c.project.id = :projectId and c.user.id = :userId")
+    BigDecimal getTotalAmountForUserPerProject(@Param("projectId") Long projectId, @Param("userId") Long userId);
+
     List<Contribution> findTop10ByProjectIdOrderByContributionDateDesc(Long projectId);
 
     List<Contribution> findAllByProjectIdAndStatus(Long projectId, ContributionStatus status);
 
     @Query("""
-    SELECT c.project.id, c.project.title, SUM(c.amount)
-    FROM Contribution c
+    SELECT Round(((c.amount / p.targetAmount) * 100), 2) AS userContributionPercentage,
+    c.project.id, p.title FROM Contribution c
+    LEFT JOIN Project p ON c.project.id = p.id
     WHERE c.user.id = :userId AND c.status = :status
-    GROUP BY c.project.id, c.project.title
     """)
-    List<Object[]> findUserContributionByProject(@Param("userId") Long userId,
-                                                 @Param("status") ContributionStatus status);
+    List<Object[]> getUserContributionPercentageByUserId(Long userId, ContributionStatus status);
 
     @Query("""
-    SELECT c.project.id, SUM(c.amount)
-    FROM Contribution c
-    WHERE c.status = :status
-    GROUP BY c.project.id
+    SELECT Round(((c.amount / p.targetAmount) * 100), 2) AS userContributionPercentage,
+    c.user.id, c.user.username FROM Contribution c
+    LEFT JOIN Project p ON c.project.id = p.id
+    WHERE c.project.id = :projectId AND c.status = :status
     """)
-    List<Object[]> findTotalContributionPerProject(@Param("status") ContributionStatus status);
+    List<Object[]> getUserContributionPercentageByProjectId(Long projectId, ContributionStatus status);
 }

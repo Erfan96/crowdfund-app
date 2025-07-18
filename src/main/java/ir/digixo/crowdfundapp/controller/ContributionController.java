@@ -110,6 +110,15 @@ public class ContributionController {
         return ResponseEntity.ok(contributionService.getTotalAmountContributionByUserId(userId));
     }
 
+    @GetMapping("/user/{userId}/total-per-project")
+    @Operation(summary = "Get total contribution amount by user per project")
+    public ResponseEntity<BigDecimal> getTotalAmountByUserPerProject(
+            @PathVariable Long userId,
+            @RequestParam Long projectId
+    ) {
+        return ResponseEntity.ok(contributionService.getTotalAmountContributionByUserIdPerProject(projectId, userId));
+    }
+
     @GetMapping("/project/{projectId}/total")
     @Operation(summary = "Get total amount contributed to a project")
     public ResponseEntity<BigDecimal> getTotalAmountToProject(@PathVariable Long projectId) {
@@ -118,11 +127,20 @@ public class ContributionController {
 
     @GetMapping("/user/{userId}/contribution-percentage")
     @Operation(summary = "Get user contribution percentage per project with status filter")
-    public ResponseEntity<List<ContributionDto>> getUserContributionPercentage(
+    public ResponseEntity<List<ContributionDto>> getUserContributionPercentageByUserId(
             @PathVariable Long userId,
             @RequestParam ContributionStatus status
     ) {
-        return ResponseEntity.ok(contributionService.getUserContributionPercentage(userId, status));
+        return ResponseEntity.ok(contributionService.getUserContributionPercentageByUserIdAndStatus(userId, status));
+    }
+
+    @GetMapping("/project/{projectId}/contribution-percentage")
+    @Operation(summary = "Get user contribution percentage by project id with status filter")
+    public ResponseEntity<List<ContributionDto>> getUserContributionPercentageByProjectId(
+            @PathVariable Long projectId,
+            @RequestParam ContributionStatus status
+    ) {
+        return ResponseEntity.ok(contributionService.getUserContributionPercentageByProjectIdAndStatus(projectId, status));
     }
 
 }
