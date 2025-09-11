@@ -179,10 +179,11 @@ public class ContributionServiceImpl implements ContributionService {
         for (Object[] row : allUserContributionPercentageByProjectId) {
             ContributionDto contributionDto = new ContributionDto();
             contributionDto.setUserContributionPercentage((BigDecimal) row[0]);
+            contributionDto.setAmount((BigDecimal) row[1]);
 
             UserDto userDto = new UserDto();
-            userDto.setId((Long) row[1]);
-            userDto.setUsername((String) row[2]);
+            userDto.setId((Long) row[2]);
+            userDto.setUsername((String) row[3]);
             contributionDto.setUser(userDto);
 
             result.add(contributionDto);

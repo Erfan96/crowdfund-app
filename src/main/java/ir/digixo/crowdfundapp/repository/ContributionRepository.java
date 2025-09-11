@@ -37,7 +37,7 @@ public interface ContributionRepository extends JpaRepository<Contribution, Long
     List<Object[]> getUserContributionPercentageByUserId(Long userId, ContributionStatus status);
 
     @Query("""
-    SELECT Round(((c.amount / p.targetAmount) * 100), 2) AS userContributionPercentage,
+    SELECT Round(((c.amount / p.targetAmount) * 100), 2) AS userContributionPercentage, c.amount,
     c.user.id, c.user.username FROM Contribution c
     LEFT JOIN Project p ON c.project.id = p.id
     WHERE c.project.id = :projectId AND c.status = :status
