@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>لیست پروژه‌ها</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>لیست پروژه‌ها</h1>
+    <ul id="project-list"></ul>
+
+    <div id="contributions" class="result" style="display:none;">
+        <h2>میزان مشارکت کاربران</h2>
+        <ul id="contribution-list"></ul>
+    </div>
+
+    <button onclick="location.href='/'">بازگشت</button>
+</div>
+<script th:src="@{/js/projects.js}"></script>
+</body>
+</html>

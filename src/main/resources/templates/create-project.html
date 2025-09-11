@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ایجاد پروژه</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>ایجاد پروژه جدید</h1>
+    <form id="project-form">
+        <input type="text" name="title" placeholder="عنوان پروژه" required>
+        <textarea name="description" placeholder="توضیحات"></textarea>
+        <input type="number" name="targetAmount" placeholder="مبلغ هدف" required>
+        <input type="date" name="endDate" required>
+        <input type="number" name="userId" placeholder="شناسه کاربر" required>
+        <button type="submit">ایجاد</button>
+    </form>
+    <div id="result" class="result"></div>
+    <button onclick="location.href='/'">بازگشت</button>
+</div>
+<script th:src="@{/js/create-project.js}"></script>
+</body>
+</html>

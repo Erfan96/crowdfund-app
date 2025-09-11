@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fa" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ایجاد کاربر</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>ایجاد کاربر جدید</h1>
+    <form id="user-form">
+        <input type="text" name="username" placeholder="نام کاربری" required>
+        <input type="email" name="email" placeholder="ایمیل" required>
+        <button type="submit">ایجاد</button>
+    </form>
+    <div id="result" class="result"></div>
+    <button onclick="location.href='/'">بازگشت</button>
+</div>
+<script th:src="@{/js/create-user.js}"></script>
+</body>
+</html>
